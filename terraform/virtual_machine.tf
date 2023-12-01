@@ -1,10 +1,10 @@
 /* Macchina virtuale EC2 per deploy applicazione */
 
-resource "aws_instance" "iac-istance" {
+resource "aws_instance" "devsecops-istance" {
   ami           = "ami-0230bd60aa48260c6"
   instance_type = "t2.medium"
   key_name = "jenkins"
-  vpc_security_group_ids = [aws_security_group.iac-istance-sg.id]
+  vpc_security_group_ids = [aws_security_group.devsecops-istance-sg.id]
   user_data = "${file("configuration.sh")}"
 
   tags = {
@@ -14,7 +14,7 @@ resource "aws_instance" "iac-istance" {
 
 
 #creazione security group
-resource "aws_security_group" "iac-istance-sg" {
+resource "aws_security_group" "devsecops-istance-sg" {
   
   vpc_id = module.vpc.vpc_id
   name="vm-devops-sg"
@@ -30,32 +30,32 @@ resource "aws_security_group" "iac-istance-sg" {
 }
 
 #creazione regole per security group: http (porte 80 e 8080) e ssh (porta 22)
-resource "aws_security_group_rule" "iac-istance-inbund-http" {
+resource "aws_security_group_rule" "devsecops-istance-inbund-http" {
   type = "ingress"
   from_port = 80
   to_port = 80
   protocol = "tcp"
   cidr_blocks = ["0.0.0.0/0"]
 
-  security_group_id = aws_security_group.iac-istance-sg.id
+  security_group_id = aws_security_group.devsecops-istance-sg.id
 }
 
-resource "aws_security_group_rule" "iac-istance-inbund-http-jenkins" {
+resource "aws_security_group_rule" "devsecops-istance-inbund-http-jenkins" {
   type = "ingress"
   from_port = 8080
   to_port = 8080
   protocol = "tcp"
   cidr_blocks = ["0.0.0.0/0"]
 
-  security_group_id = aws_security_group.iac-istance-sg.id
+  security_group_id = aws_security_group.devsecops-istance-sg.id
 }
 
-resource "aws_security_group_rule" "iac-istance-inbund-ssh" {
+resource "aws_security_group_rule" "devsecops-istance-inbund-ssh" {
   type = "ingress"
   from_port = 22
   to_port = 22
   protocol = "tcp"
   cidr_blocks = ["0.0.0.0/0"]
 
-  security_group_id = aws_security_group.iac-istance-sg.id
+  security_group_id = aws_security_group.devsecops-istance-sg.id
 }
