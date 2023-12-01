@@ -5,7 +5,7 @@ resource "aws_instance" "devsecops-istance" {
   instance_type = "t2.medium"
   key_name = "jenkins"
   vpc_security_group_ids = [aws_security_group.devsecops-istance-sg.id]
-  subnet_id = "${element(module.vpc.private_subnets, 0)}"
+  subnet_id = "${element(module.vpc.public_subnets, 0)}"
   user_data = "${file("configuration.sh")}"
 
   tags = {
