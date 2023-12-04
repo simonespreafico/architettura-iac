@@ -6,7 +6,7 @@ resource "aws_instance" "devsecops-istance" {
   key_name = "jenkins"
   vpc_security_group_ids = [aws_security_group.devsecops-istance-sg.id]
   subnet_id = "${element(module.vpc.public_subnets, 0)}"
-  user_data = "${file("configuration.sh")}"
+  user_data = file("configuration.sh")
 
   associate_public_ip_address = true  # Aggiunto per assegnare un IP pubblico
 
