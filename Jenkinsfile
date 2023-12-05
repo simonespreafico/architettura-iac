@@ -3,7 +3,6 @@ pipeline {
 
     environment{
         TERRAFORM_DIR="terraform"
-        TERRASCAN_OUTPUT=""
     }
 
     stages {
@@ -31,11 +30,12 @@ pipeline {
                 dir("${TERRAFORM_DIR}") {
                     ansiColor('xterm') {
                         script{
-                            def terrascanOutput = sh (
+                            TERRASCAN = sh (
                                 script: 'terrascan scan -o junit-xml -t aws -i terraform',
                                 returnStdout: true
                             ).trim()
-                            junit terrascanOutput
+                            echo "TERRASCAN = ${TERRASCAN}"
+                            //junit terrascanOutput
                         }
                     }
                 }
