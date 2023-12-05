@@ -31,12 +31,11 @@ pipeline {
                 dir("${TERRAFORM_DIR}") {
                     ansiColor('xterm') {
                         script{
-                            TERRASCAN_OUTPUT=sh (
-                                label: 'Scansione codice Iac',
-                                returnStdout: true, 
-                                script: 'terrascan scan -o junit-xml -t aws -i terraform'
-                            )
-                            junit "${TERRASCAN_OUTPUT}"
+                            def terrascanOutput = sh (
+                                script: 'terrascan scan -o junit-xml -t aws -i terraform',
+                                returnStdout: true
+                            ).trim()
+                            junit terrascanOutput
                         }
                     }
                 }
