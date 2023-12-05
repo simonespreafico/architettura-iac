@@ -102,7 +102,8 @@ pipeline {
     }
     post {
         always {
-            junit "${WORKSPACE}/*.xml"
+            cp terrascan.xml $WORKSPACE
+            junit "${WORKSPACE}/terrascan.xml"
         }
     }
 }
