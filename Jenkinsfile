@@ -102,7 +102,7 @@ pipeline {
     }
     post {
         always {
-            junit skipPublishingChecks: true, testResults: 'terrascan.xml'
+            junit skipPublishingChecks: true, testResults: '${env.WORKSPACE}/terraform/terrascan.xml'
         }
     }
 }
