@@ -29,8 +29,10 @@ pipeline {
             steps {
                 dir("${TERRAFORM_DIR}") {
                     ansiColor('xterm') {
-                        sh "terrascan scan -t aws"
+                        sh "terrascan scan -t aws || true"
                     }
+                    sh "terrascan scan -o junit-xml -t aws > terrascan.xml || true"
+                    junit skipPublishingChecks: true, testResults: 'terrascan.xml'
                 }
             }
         }
