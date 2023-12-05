@@ -29,6 +29,7 @@ pipeline {
             steps {
                 dir("${TERRAFORM_DIR}") {
                     sh "terrascan scan -o junit-xml -t aws > terrascan.xml || true"
+                    junit skipPublishingChecks: true, testResults: 'terrascan.xml'
                 }
             }
         }
@@ -99,10 +100,5 @@ pipeline {
             }
         }
         */
-    }
-    post {
-        always {
-            junit skipPublishingChecks: true, testResults: '${env.WORKSPACE}/terraform/terrascan.xml'
-        }
     }
 }
