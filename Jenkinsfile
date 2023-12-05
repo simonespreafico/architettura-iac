@@ -28,14 +28,7 @@ pipeline {
         stage('Scansione codice Iac') {
             steps {
                 dir("${TERRAFORM_DIR}") {
-                    git 'https://github.com/tenable/terrascan.git'
-                    dir("terrascan")
-                    {
-                        sh "sudo touch terrascan.xml"
-                        sh 'make build'
-                        sh './bin/terrascan scan -d ../. -o junit-xml -t aws > terrascan.xml'
-                        junit 'terrascan.xml'
-                    }
+                    sh "terrascan scan -o junit-xml -t aws > terrascan.xml"
                 }
             }
         }
