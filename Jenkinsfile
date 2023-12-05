@@ -30,7 +30,7 @@ pipeline {
                 dir("${TERRAFORM_DIR}") {
                     ansiColor('xterm') {
                         sh "sudo touch terrascan_output.xml"
-                        sh "terrascan scan -o junit-xml -t aws -i terraform > terrascan_output.xml"
+                        sh "sudo terrascan scan -o junit-xml -t aws -i terraform > terrascan_output.xml"
                         junit "terrascan_output.xml"
                     }
                 }
