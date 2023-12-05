@@ -31,7 +31,7 @@ pipeline {
                     ansiColor('xterm') {
                         script{
                             sh "sudo touch terrascan_output.xml"
-                            sh "sudo terrascan scan -o junit-xml -t aws -i terraform > terrascan_output.xml"
+                            sh "sudo /usr/local/bin/terrascan scan -o junit-xml -t aws -i terraform > terrascan_output.xml"
                             junit "terrascan_output.xml"
                         }
                     }
