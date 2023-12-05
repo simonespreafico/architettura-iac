@@ -29,6 +29,7 @@ pipeline {
             steps {
                 dir("${TERRAFORM_DIR}") {
                     sh "terrascan scan -o junit-xml -t aws > terrascan.xml || true"
+                    junit 'terrascan.xml'
                 }
             }
         }
