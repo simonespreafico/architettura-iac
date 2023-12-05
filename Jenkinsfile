@@ -28,7 +28,8 @@ pipeline {
         stage('Scansione codice Iac') {
             steps {
                 dir("${TERRAFORM_DIR}") {
-                    sh "terrascan scan -o junit-xml -t aws -i terraform"
+                    sh 'terrascan scan -o junit-xml -t aws -i terraform > terrascan.xml'
+                    junit 'terrascan.xml'
                 }
             }
         }
