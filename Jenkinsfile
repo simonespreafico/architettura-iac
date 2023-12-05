@@ -19,7 +19,18 @@ pipeline {
             steps {
                 dir("${TERRAFORM_DIR}") {
                     ansiColor('xterm') {
+                        sh "terraform fmt"
                         sh "terraform validate"
+                    }
+                }
+            }
+        }
+        stage('Scansione codice Iac') {
+            steps {
+                dir("${TERRAFORM_DIR}") {
+                    ansiColor('xterm') {
+                        sh "terrascan scan -o junit-xml -t aws -i terraform > terrascan_output.xml"
+                        junit "terrascan_output.xml"
                     }
                 }
             }
