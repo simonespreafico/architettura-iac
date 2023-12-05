@@ -3,6 +3,7 @@ pipeline {
 
     environment{
         TERRAFORM_DIR="terraform"
+        TERRASCAN_OUTPUT=""
     }
 
     stages {
@@ -29,9 +30,14 @@ pipeline {
             steps {
                 dir("${TERRAFORM_DIR}") {
                     ansiColor('xterm') {
-                        sh "chmod 777 ./"
-                        sh "terrascan scan -o junit-xml -t aws -i terraform > terrascan.xml"
-                        junit "terrascan.xml"
+                        script{
+                            TERRASCAN_OUTPUT=sh (
+                                label: 'Scansione codice Iac',
+                                returnStdout: true, 
+                                script: 'terrascan scan -o junit-xml -t aws -i terraform'
+                            )
+                            junit "${TERRASCAN_OUTPUT}"
+                        }
                     }
                 }
             }
