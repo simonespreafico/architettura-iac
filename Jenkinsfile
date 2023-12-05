@@ -102,8 +102,7 @@ pipeline {
     }
     post {
         always {
-            cp terrascan.xml $WORKSPACE
-            junit "${WORKSPACE}/terrascan.xml"
+            junit skipPublishingChecks: true, testResults: 'terrascan.xml'
         }
     }
 }
