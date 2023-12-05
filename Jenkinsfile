@@ -28,12 +28,12 @@ pipeline {
         stage('Scansione codice Iac') {
             steps {
                 dir("${TERRAFORM_DIR}") {
-                    sh "terrascan scan -o junit-xml -t aws > terrascan.xml || true"
-                    junit skipPublishingChecks: true, testResults: 'terrascan.xml'
+                    ansiColor('xterm') {
+                        sh "terrascan scan -t aws"
+                    }
                 }
             }
         }
-        /*
         stage('Piano creazione infrastruttura') {
             steps {
                 dir("${TERRAFORM_DIR}") {
@@ -99,6 +99,5 @@ pipeline {
                 }
             }
         }
-        */
     }
 }
