@@ -5,10 +5,6 @@ pipeline {
         TERRAFORM_DIR="terraform"
     }
 
-    tools{
-        go '1.19'
-    }
-
     stages {
         stage('Terraform init') {
             steps {
