@@ -28,16 +28,7 @@ pipeline {
         stage('Scansione codice Iac') {
             steps {
                 dir("${TERRAFORM_DIR}") {
-                    ansiColor('xterm') {
-                        script{
-                            TERRASCAN = sh (
-                                script: 'terrascan scan -o junit-xml -t aws -i terraform',
-                                returnStdout: true
-                            ).trim()
-                            echo "TERRASCAN = ${TERRASCAN}"
-                            //junit terrascanOutput
-                        }
-                    }
+                    sh "terrascan scan -o junit-xml -t aws -i terraform"
                 }
             }
         }
