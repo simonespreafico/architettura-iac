@@ -102,7 +102,7 @@ pipeline {
     }
     post {
         always {
-            junit "terrascan.xml"
+            junit "${WORKSPACE}/*.xml"
         }
     }
 }
