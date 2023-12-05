@@ -99,10 +99,10 @@ pipeline {
             }
         }
         */
-        post {
-            always {
-                junit "terrascan.xml"
-            }
+    }
+    post {
+        always {
+            junit "terrascan.xml"
         }
     }
 }
