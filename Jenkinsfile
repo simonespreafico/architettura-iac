@@ -29,10 +29,9 @@ pipeline {
             steps {
                 dir("${TERRAFORM_DIR}") {
                     ansiColor('xterm') {
-                        script{
-                            sh "terrascan scan -o junit-xml -t aws -i terraform --output-file=terrascan.xml"
-                            junit "terrascan.xml"
-                        }
+                        sh "chmod 777 ./"
+                        sh "terrascan scan -o junit-xml -t aws -i terraform > terrascan.xml"
+                        junit "terrascan.xml"
                     }
                 }
             }
