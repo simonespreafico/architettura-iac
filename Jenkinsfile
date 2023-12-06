@@ -6,6 +6,14 @@ pipeline {
     }
 
     stages {
+        stage('Rilevazione segreti repository') {
+            steps {
+                ansiColor('xterm') {
+                    sh "gitleaks detect -f junit -r gitleaks-report.xml"
+                }
+                archiveArtifacts artifacts: 'gitleaks-report.xml', followSymlinks: false
+            }
+        }
         stage('Terraform init') {
             steps {
                 dir("${TERRAFORM_DIR}") {
@@ -31,8 +39,9 @@ pipeline {
                     ansiColor('xterm') {
                         sh "terrascan scan -t aws || true"
                     }
-                    sh "terrascan scan -o junit-xml -t aws > terrascan.xml || true"
-                    junit skipPublishingChecks: true, testResults: 'terrascan.xml'
+                    sh "terrascan scan -o junit-xml -t aws > terrascan-report.xml || true"
+                    junit skipPublishingChecks: true, testResults: 'terrascan-report.xml'
+                    archiveArtifacts artifacts: 'terrascan-report.xml', followSymlinks: false
                 }
             }
         }
