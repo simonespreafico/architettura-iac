@@ -11,7 +11,7 @@ pipeline {
                 ansiColor('xterm') {
                     sh "gitleaks detect -f junit -r gitleaks-report.xml"
                 }
-                junit skipPublishingChecks: true, testResults: 'gitleaks-report.xml'
+                junit skipPublishingChecks: true, allowEmptyResults: true, testResults: 'gitleaks-report.xml'
                 archiveArtifacts artifacts: 'gitleaks-report.xml', followSymlinks: false
             }
         }
@@ -41,7 +41,7 @@ pipeline {
                         sh "terrascan scan -t aws || true"
                     }
                     sh "terrascan scan -o junit-xml -t aws > terrascan-report.xml || true"
-                    junit skipPublishingChecks: true, testResults: 'terrascan-report.xml'
+                    junit skipPublishingChecks: true, allowEmptyResults: true, testResults: 'terrascan-report.xml'
                     archiveArtifacts artifacts: 'terrascan-report.xml', followSymlinks: false
                 }
             }
