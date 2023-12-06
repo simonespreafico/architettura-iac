@@ -11,6 +11,7 @@ pipeline {
                 ansiColor('xterm') {
                     sh "gitleaks detect -f junit -r gitleaks-report.xml"
                 }
+                junit skipPublishingChecks: true, testResults: 'gitleaks-report.xml'
                 archiveArtifacts artifacts: 'gitleaks-report.xml', followSymlinks: false
             }
         }
