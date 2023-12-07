@@ -1,27 +1,22 @@
 pipeline {
     agent any
 
-    tools {
-        go '1.13'
-    }
-
     parameters {
         booleanParam(name: "distruzione", description: "Distruggere l'infrastruttura?", defaultValue: false )
     }
 
     environment {
         TERRAFORM_DIR="terraform"
-        SEC_TOOLS_DIR="sec-tools"
     }
 
     stages {
         stage('Update tool security') {
             steps {
-                dir("${SEC_TOOLS_DIR}")
-                {
                     sh '''#!/bin/bash
                     git clone https://github.com/gitleaks/gitleaks.git
                     cd gitleaks
+                    make format
+                    make clean
                     make build
                     sudo chown -R root gitleaks
                     sudo chgrp -R root gitleaks
@@ -36,7 +31,6 @@ pipeline {
                     sudo install terrascan /usr/local/bin && rm terrascan
                     echo "Terrascan installato con successo"
                     '''
-                }
             }
         }
         stage('Rilevazione segreti repository') {
