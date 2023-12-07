@@ -1,11 +1,25 @@
 pipeline {
     agent any
 
-    environment{
+    parameters {
+        booleanParam(name: "distruzione", description: "Distruggere l'infrastruttura?", defaultValue: false )
+    }
+
+    environment {
         TERRAFORM_DIR="terraform"
+        SEC_TOOLS_DIR="sec-tools"
     }
 
     stages {
+        stage('Update tool security') {
+            steps {
+                dir("${SEC_TOOLS_DIR}")
+                {
+                    sh "./gitleaks-installation.sh"
+                    sh "./terrascan-installation.sh"
+                }
+            }
+        }
         stage('Rilevazione segreti repository') {
             steps {
                 ansiColor('xterm') {
@@ -36,6 +50,7 @@ pipeline {
         }
         stage('Scansione codice Iac') {
             steps {
+                sh "brew upgrade terrascan"
                 dir("${TERRAFORM_DIR}") {
                     ansiColor('xterm') {
                         sh "terrascan scan -t aws || true"
@@ -47,6 +62,11 @@ pipeline {
             }
         }
         stage('Piano creazione infrastruttura') {
+            when {
+                expression {
+                    return params.distruzione == false
+                }
+            }
             steps {
                 dir("${TERRAFORM_DIR}") {
                     withCredentials([aws(accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'simone-aws-creds', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY')]) {
@@ -58,11 +78,21 @@ pipeline {
             }
         }
         stage('Approvazione creazione infrastruttura') {
+            when {
+                expression {
+                    return params.distruzione == false
+                }
+            }
             steps {
                 input "Approvazione creazione infrastruttura?"
             }
         }
         stage('Creazione infrastruttura') {
+            when {
+                expression {
+                    return params.distruzione == false
+                }
+            }
             steps {
                 withCredentials([aws(accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'simone-aws-creds', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY')]) {
                     dir("${TERRAFORM_DIR}") {
@@ -74,6 +104,11 @@ pipeline {
             }
         }
         stage('Terraform output') {
+            when {
+                expression {
+                    return params.distruzione == false
+                }
+            }
             steps {
                 withCredentials([aws(accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'simone-aws-creds', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY')]) {
                     dir("${TERRAFORM_DIR}") {
@@ -85,6 +120,11 @@ pipeline {
             }
         }
         stage('Piano distruzione infrastruttura') {
+            when {
+                expression {
+                    return params.distruzione == true
+                }
+            }
             steps {
                 dir("${TERRAFORM_DIR}") {
                     withCredentials([aws(accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'simone-aws-creds', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY')]) {
@@ -96,11 +136,21 @@ pipeline {
             }
         }
         stage('Approvazione distruzione infrastruttura') {
+            when {
+                expression {
+                    return params.distruzione == true
+                }
+            }
             steps {
                 input "Approvazione distruzione infrastruttura?"
             }
         }
         stage('Distruzione infrastruttura') {
+            when {
+                expression {
+                    return params.distruzione == true
+                }
+            }
             steps {
                 withCredentials([aws(accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'simone-aws-creds', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY')]) {
                     dir("${TERRAFORM_DIR}") {
