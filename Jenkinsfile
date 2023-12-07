@@ -12,6 +12,7 @@ pipeline {
     stages {
         stage('Update tool security') {
             steps {
+                    echo "Update gitleaks..."
                     sh '''#!/bin/bash
                     git clone https://github.com/gitleaks/gitleaks.git
                     cd gitleaks
@@ -23,14 +24,16 @@ pipeline {
                     sudo cp gitleaks /usr/bin/
                     cd ..
                     sudo rm -Rf gitleaks
-                    echo "gitleaks installato correttamente"
                     '''
+                    echo "gitleaks updated!"
+                    echo "Update terrascan..."
                     sh '''#!/bin/bash
                     curl -L "$(curl -s https://api.github.com/repos/tenable/terrascan/releases/latest | grep -o -E "https://.+?_Linux_x86_64.tar.gz")" > terrascan.tar.gz
                     tar -xf terrascan.tar.gz terrascan && rm terrascan.tar.gz
                     sudo install terrascan /usr/local/bin && rm terrascan
-                    echo "Terrascan installato con successo"
                     '''
+                    sh 'terrascan init'
+                    echo "terrascan updated!"
             }
         }
         stage('Rilevazione segreti repository') {
