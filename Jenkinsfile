@@ -15,8 +15,23 @@ pipeline {
             steps {
                 dir("${SEC_TOOLS_DIR}")
                 {
-                    sh "./gitleaks-installation.sh"
-                    sh "./terrascan-installation.sh"
+                    sh '''#!/bin/bash
+                    git clone https://github.com/gitleaks/gitleaks.git
+                    cd gitleaks
+                    make build
+                    sudo chown -R root gitleaks
+                    sudo chgrp -R root gitleaks
+                    sudo cp gitleaks /usr/bin/
+                    cd ..
+                    sudo rm -Rf gitleaks
+                    echo "gitleaks installato correttamente"
+                    '''
+                    sh '''#!/bin/bash
+                    curl -L "$(curl -s https://api.github.com/repos/tenable/terrascan/releases/latest | grep -o -E "https://.+?_Linux_x86_64.tar.gz")" > terrascan.tar.gz
+                    tar -xf terrascan.tar.gz terrascan && rm terrascan.tar.gz
+                    sudo install terrascan /usr/local/bin && rm terrascan
+                    echo "Terrascan installato con successo"
+                    '''
                 }
             }
         }
