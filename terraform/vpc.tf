@@ -35,3 +35,14 @@ module "vpc" {
     "kubernetes.io/role/internal-elb"             = 1
   }
 }
+
+resource "aws_flow_log" "vpc_flow_log" {
+  log_destination      = aws_s3_bucket.vpc_flow_log_bucker.arn
+  log_destination_type = "s3"
+  traffic_type         = "ALL"
+  vpc_id               = module.vpc.vpc_id
+}
+
+resource "aws_s3_bucket" "vpc_flow_log_bucker" {
+  bucket = "vpc-flow"
+}

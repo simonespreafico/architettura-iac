@@ -8,6 +8,8 @@ resource "aws_instance" "devsecops-istance" {
   subnet_id = "${element(module.vpc.public_subnets, 0)}"
   user_data = file("configuration.sh")
 
+  monitoring = true
+
   associate_public_ip_address = true  # Aggiunto per assegnare un IP pubblico
 
   tags = {
