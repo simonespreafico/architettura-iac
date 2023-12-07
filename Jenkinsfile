@@ -65,7 +65,6 @@ pipeline {
         }
         stage('Scansione codice Iac') {
             steps {
-                sh "brew upgrade terrascan"
                 dir("${TERRAFORM_DIR}") {
                     ansiColor('xterm') {
                         sh "terrascan scan -t aws || true"
