@@ -1,6 +1,10 @@
 pipeline {
     agent any
 
+    tools {
+        go '1.13'
+    }
+
     parameters {
         booleanParam(name: "distruzione", description: "Distruggere l'infrastruttura?", defaultValue: false )
     }
