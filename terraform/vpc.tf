@@ -34,6 +34,8 @@ module "vpc" {
     "kubernetes.io/cluster/${var.cluster_name}" = "shared"
     "kubernetes.io/role/internal-elb"             = 1
   }
+
+  flow_log_file_format = "plain-text"
 }
 
 resource "aws_flow_log" "vpc_flow_log" {
