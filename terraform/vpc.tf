@@ -39,7 +39,7 @@ module "vpc" {
 }
 
 resource "aws_flow_log" "sspreafico-main-vpc-flow-log" {
-  iam_role_arn    = aws_iam_role.iam-role-flow-sspreafico-main-vpc.arn
+  iam_role_arn    = aws_iam_role.iam-role-log-flow-sspreafico-main-vpc.arn
   log_destination = aws_cloudwatch_log_group.sspreafico-cloudwatch-log-group.arn
   traffic_type    = "ALL"
   vpc_id          = module.vpc.vpc_id
