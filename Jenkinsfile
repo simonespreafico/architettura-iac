@@ -33,7 +33,14 @@ pipeline {
                     sudo install terrascan /usr/local/bin && rm terrascan
                     '''
                     sh 'terrascan init'
-                    sh 'rm gitleaks-report.xml && rm terraform/terrascan-report.xml'
+                    if(fileExists('gitleaks-report.xml'))
+                    {
+                        sh 'rm gitleaks-report.xml'
+                    }
+                    if(fileExists('terraform/terrascan-report.xml'))
+                    {
+                        sh 'rm terraform/terrascan-report.xml'
+                    }
                     echo "terrascan updated!"
             }
         }
