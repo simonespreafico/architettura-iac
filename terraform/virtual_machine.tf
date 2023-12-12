@@ -3,7 +3,7 @@
 resource "aws_instance" "devsecops-istance" {
   ami           = "ami-0230bd60aa48260c6"
   instance_type = "t2.medium"
-  key_name = "jenkins"
+  key_name = "vm-devops-key"
   vpc_security_group_ids = [aws_security_group.devsecops-istance-sg.id]
   subnet_id = "${element(module.vpc.public_subnets, 0)}"
   user_data = "configuration.sh"
