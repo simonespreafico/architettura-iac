@@ -1,30 +1,27 @@
-# configurazione macchina ec2 devops
-
 #!/bin/bash
-
 #aggiornamento pacchetti
 echo "Aggiornamento pacchetti istanza..."
-sudo yum update –y
+yum update –y
 
 #Aggiunta Jenkins repo
 echo "Aggiunta del Jenkins Repo..."
-sudo wget -O /etc/yum.repos.d/jenkins.repo https://pkg.jenkins.io/redhat-stable/jenkins.repo
+wget -O /etc/yum.repos.d/jenkins.repo https://pkg.jenkins.io/redhat-stable/jenkins.repo
 
 #Importazione chiave repository jenkins
 echo "Importazione chiave repository Jenkins..."
-sudo rpm --import https://pkg.jenkins.io/redhat-stable/jenkins.io-2023.key
+rpm --import https://pkg.jenkins.io/redhat-stable/jenkins.io-2023.key
 
 #upgrade sistema
 echo "Upgrade istanza..."
-sudo yum upgrade
+yum upgrade
 
 #installazione java17 per amazon linux
 echo "Installazione java-17..."
-sudo dnf install java-17-amazon-corretto -y
+dnf install java-17-amazon-corretto -y
 
 #installazione jenkins
 echo "Installazione Jenkins..."
-sudo yum install jenkins -y
+yum install jenkins -y
 
 #installazione aws-iam-authenticator
 echo "Installazione aws-iam-authenticator"
@@ -42,27 +39,27 @@ mkdir -p $HOME/bin && cp ./kubectl $HOME/bin/kubectl && export PATH=$HOME/bin:$P
 echo 'export PATH=$HOME/bin:$PATH' >> ~/.bashrc
 
 #installazione di docker
-sudo yum install -y docker
-sudo service docker start
+yum install -y docker
+service docker start
 #aggiungo utente ec2 a gruppo docker (per eseguire docker senza sudo)
-sudo usermod -a -G docker ec2-user
+usermod -a -G docker ec2-user
 
 #abilita jenkins all'avvio della macchina
 echo "Abilitazione di Jenkins all'avvio della macchina..."
-sudo systemctl enable jenkins
+systemctl enable jenkins
 
 #avvia jenkins
 echo "Start jenkins..."
-sudo systemctl start jenkins
+systemctl start jenkins
 
 #password per sbloccare jenkins alla prima installazione
 echo -n "Jenkins initialAdminPassword: "
-sudo cat /var/lib/jenkins/secrets/initialAdminPassword
+cat /var/lib/jenkins/secrets/initialAdminPassword
 
 #controlla che utente jenkins esista sulla macchina e lo aggiunge al file sudoers
 if id -u "jenkins" >/dev/null 2>&1; then
     echo 'Utente jenkins esistente, lo abilito nel file sudoers'
-    echo 'jenkins ALL=(ALL) NOPASSWD: ALL' | sudo EDITOR='tee -a' visudo
+    echo 'jenkins ALL=(ALL) NOPASSWD: ALL' | EDITOR='tee -a' visudo
 else
     echo 'Utente jenkins non esistente'
 fi
