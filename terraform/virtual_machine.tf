@@ -7,6 +7,13 @@ resource "aws_instance" "devsecops-istance" {
   vpc_security_group_ids = [aws_security_group.devsecops-istance-sg.id]
   subnet_id = "${element(module.vpc.public_subnets, 0)}"
   user_data = "configuration.sh"
+
+  monitoring = true
+
+  metadata_options {
+    http_endpoint = "disabled"
+    instance_metadata_tags = "disabled"
+  }
   
   associate_public_ip_address = true  # Aggiunto per assegnare un IP pubblico
 
