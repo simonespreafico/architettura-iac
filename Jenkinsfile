@@ -12,6 +12,7 @@ pipeline {
     stages {
         stage('Update tool security') {
             steps {
+                script {
                     echo "Update gitleaks..."
                     sh '''#!/bin/bash
                     git clone https://github.com/gitleaks/gitleaks.git
@@ -42,6 +43,7 @@ pipeline {
                         sh 'rm terraform/terrascan-report.xml'
                     }
                     echo "terrascan updated!"
+                }
             }
         }
         stage('Rilevazione segreti repository') {
