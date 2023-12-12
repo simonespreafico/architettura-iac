@@ -38,7 +38,53 @@ module "vpc" {
   flow_log_file_format = "plain-text"
 }
 
-resource "aws_flow_log" "vpc_flow_log" {
-  traffic_type         = "ALL"
-  vpc_id               = module.vpc.vpc_id
+resource "aws_flow_log" "sspreafico-main-vpc-flow-log" {
+  iam_role_arn    = aws_iam_role.iam-role-flow-sspreafico-main-vpc.arn
+  log_destination = aws_cloudwatch_log_group.sspreafico-cloudwatch-log-group.arn
+  traffic_type    = "ALL"
+  vpc_id          = module.vpc.vpc_id
+}
+
+resource "aws_cloudwatch_log_group" "sspreafico-cloudwatch-log-group" {
+  name = "sspreafico"
+}
+
+data "aws_iam_policy_document" "assume_role" {
+  statement {
+    effect = "Allow"
+
+    principals {
+      type        = "Service"
+      identifiers = ["vpc-flow-logs.amazonaws.com"]
+    }
+
+    actions = ["sts:AssumeRole"]
+  }
+}
+
+resource "aws_iam_role" "iam-role-log-flow-sspreafico-main-vpc" {
+  name               = "iam-role-flow-sspreafico-main-vpc"
+  assume_role_policy = data.aws_iam_policy_document.assume_role.json
+}
+
+data "aws_iam_policy_document" "iampolicy-document-vpc-log-flow-sspreafico-main-vpc" {
+  statement {
+    effect = "Allow"
+
+    actions = [
+      "logs:CreateLogGroup",
+      "logs:CreateLogStream",
+      "logs:PutLogEvents",
+      "logs:DescribeLogGroups",
+      "logs:DescribeLogStreams",
+    ]
+
+    resources = ["*"]
+  }
+}
+
+resource "aws_iam_role_policy" "example" {
+  name   = "iam-role-policy-flow-log-sspreafico-main-vpc"
+  role   = aws_iam_role.iam-role-log-flow-sspreafico-main-vpc.id
+  policy = data.aws_iam_policy_document.iampolicy-document-vpc-log-flow-sspreafico-main-vpc.json
 }
