@@ -47,6 +47,7 @@ resource "aws_flow_log" "sspreafico-main-vpc-flow-log" {
 
 resource "aws_cloudwatch_log_group" "sspreafico-cloudwatch-log-group" {
   name = "sspreafico"
+  retention_in_days = 90
 }
 
 data "aws_iam_policy_document" "assume_role" {
