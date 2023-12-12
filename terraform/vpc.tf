@@ -46,8 +46,7 @@ resource "aws_flow_log" "sspreafico-main-vpc-flow-log" {
 }
 
 resource "aws_cloudwatch_log_group" "sspreafico-cloudwatch-log-group" {
-  arn = "arn:aws:logs:us-east-1:903266019256:log-group:sspreafico:*"
-  name = "sspreafico"
+  name = "sspreafico-flow-log-vpc-group"
   retention_in_days = 90
 }
 
