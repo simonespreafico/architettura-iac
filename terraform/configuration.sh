@@ -66,8 +66,3 @@ if id -u "jenkins" >/dev/null 2>&1; then
 else
     echo 'Utente jenkins non esistente'
 fi
-
-#disabilita ec2 metadata
-echo "EC2 metadata disabled"
-echo 'AWS_EC2_METADATA_DISABLED=true' >> /etc/environment
-systemctl restart systemd-resolved
