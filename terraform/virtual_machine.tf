@@ -1,6 +1,8 @@
 /* Macchina virtuale EC2 per deploy applicazione */
 
 resource "aws_instance" "devsecops-istance" {
+  #ts:skip=AC_AWS_0480 Monitoring non necessario per macchina devsecops
+  #ts:skip=AC_AWS_0479 Disabilitazione Metadati istanza non necessario per macchina devsecops
   ami           = "ami-0230bd60aa48260c6"
   instance_type = "t2.medium"
   key_name = "vm-devops-key"
