@@ -15,6 +15,10 @@ rpm --import https://pkg.jenkins.io/redhat-stable/jenkins.io-2023.key
 echo "Upgrade istanza..."
 yum upgrade
 
+#installazione git
+echo "Installazione git"
+yum install git -y
+
 #installazione java17 per amazon linux
 echo "Installazione java-17..."
 dnf install java-17-amazon-corretto -y
