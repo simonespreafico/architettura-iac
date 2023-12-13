@@ -55,6 +55,18 @@ pipeline {
                 archiveArtifacts artifacts: 'gitleaks-report.xml', followSymlinks: false
             }
         }
+        stage('Scansione codice Iac') {
+            steps {
+                dir("${TERRAFORM_DIR}") {
+                    ansiColor('xterm') {
+                        sh 'terrascan scan -t aws -i terraform --skip-rules="AC_AWS_0369"'
+                    }
+                    sh 'terrascan scan -t aws -o junit-xml --skip-rules="AC_AWS_0369" > terrascan-report.xml'
+                    junit skipPublishingChecks: true, allowEmptyResults: true, testResults: 'terrascan-report.xml'
+                    archiveArtifacts artifacts: 'terrascan-report.xml', followSymlinks: false
+                }
+            }
+        }
         stage('Terraform init') {
             steps {
                 dir("${TERRAFORM_DIR}") {
@@ -71,18 +83,6 @@ pipeline {
                         sh "terraform fmt"
                         sh "terraform validate"
                     }
-                }
-            }
-        }
-        stage('Scansione codice Iac') {
-            steps {
-                dir("${TERRAFORM_DIR}") {
-                    ansiColor('xterm') {
-                        sh 'terrascan scan -t aws --skip-rules="AC_AWS_0369" || true'
-                    }
-                    sh 'terrascan scan -t aws -o junit-xml --skip-rules="AC_AWS_0369" > terrascan-report.xml || true'
-                    junit skipPublishingChecks: true, allowEmptyResults: true, testResults: 'terrascan-report.xml'
-                    archiveArtifacts artifacts: 'terrascan-report.xml', followSymlinks: false
                 }
             }
         }
