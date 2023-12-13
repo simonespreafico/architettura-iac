@@ -10,7 +10,6 @@ data "aws_availability_zones" "available" {
 }
 
 module "vpc" {
-  #ts:skip=AC_AWS_0369 vpc flow logging non necessario
   source  = "terraform-aws-modules/vpc/aws"
   version = "5.0.0"
 
