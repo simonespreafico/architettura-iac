@@ -51,6 +51,7 @@ resource "aws_security_group_rule" "devsecops-istance-inbund-http" {
 }
 
 resource "aws_security_group_rule" "devsecops-istance-inbund-http-jenkins" {
+  #ts:skip=AC_AWS_0284 Devo permettere accesso a jenkins
   type = "ingress"
   from_port = 8080
   to_port = 8080
@@ -61,6 +62,7 @@ resource "aws_security_group_rule" "devsecops-istance-inbund-http-jenkins" {
 }
 
 resource "aws_security_group_rule" "devsecops-istance-inbund-ssh" {
+  #ts:skip=AC_AWS_0319 Devo permettere accesso a istanza tramite ssh
   type = "ingress"
   from_port = 22
   to_port = 22
