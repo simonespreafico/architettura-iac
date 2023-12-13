@@ -61,7 +61,7 @@ pipeline {
                     ansiColor('xterm') {
                         sh 'terrascan scan -t aws -i terraform --skip-rules="AC_AWS_0369"'
                     }
-                    sh 'terrascan scan -t aws -o junit-xml --skip-rules="AC_AWS_0369" > terrascan-report.xml'
+                    sh 'terrascan scan -t aws -i terraform -o junit-xml --skip-rules="AC_AWS_0369" > terrascan-report.xml'
                     junit skipPublishingChecks: true, allowEmptyResults: true, testResults: 'terrascan-report.xml'
                     archiveArtifacts artifacts: 'terrascan-report.xml', followSymlinks: false
                 }
