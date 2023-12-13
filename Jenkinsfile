@@ -78,9 +78,9 @@ pipeline {
             steps {
                 dir("${TERRAFORM_DIR}") {
                     ansiColor('xterm') {
-                        sh 'terrascan scan -t aws -skip-rules="AC_AWS_0369,AC_AWS_0480,AC_AWS_0319,AC_AWS_0479,AC_AWS_0284" || true'
+                        sh 'terrascan scan -t aws || true'
                     }
-                    sh 'terrascan scan -t aws -skip-rules="AC_AWS_0369,AC_AWS_0480,AC_AWS_0319,AC_AWS_0479,AC_AWS_0284" > terrascan-report.xml || true'
+                    sh 'terrascan scan -t aws > terrascan-report.xml || true'
                     junit skipPublishingChecks: true, allowEmptyResults: true, testResults: 'terrascan-report.xml'
                     archiveArtifacts artifacts: 'terrascan-report.xml', followSymlinks: false
                 }
