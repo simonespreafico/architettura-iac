@@ -19,6 +19,12 @@ yum upgrade
 echo "Installazione git"
 yum install git -y
 
+#installazione di maven
+echo "Installazione maven"
+wget -O /etc/yum.repos.d/epel-apache-maven.repo https://repos.fedorapeople.org/repos/dchen/apache-maven/epel-apache-maven.repo
+sed -i s/\$releasever/6/g /etc/yum.repos.d/epel-apache-maven.repo
+yum install apache-maven -y
+
 #installazione java17 per amazon linux
 echo "Installazione java-17..."
 dnf install java-17-amazon-corretto -y
@@ -59,6 +65,9 @@ systemctl start jenkins
 #password per sbloccare jenkins alla prima installazione
 echo -n "Jenkins initialAdminPassword: "
 cat /var/lib/jenkins/secrets/initialAdminPassword
+
+#aggiungo utente jenkins a gruppo docker (per eseguire docker senza sudo)
+usermod -a -G docker jenkins
 
 #controlla che utente jenkins esista sulla macchina e lo aggiunge al file sudoers
 if id -u "jenkins" >/dev/null 2>&1; then
