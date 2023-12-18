@@ -11,6 +11,14 @@ module "eks" {
   subnet_ids                     = module.vpc.private_subnets
   cluster_endpoint_public_access = true
 
+  # Estende sg per permettere accesso alla macchina ec2 "devops"
+  cluster_security_group_additional_rules = {
+    ingress_ec2 = {
+      type                       = "ingress"
+      source_security_group_id   = aws_security_group.devsecops-istance-sg.id
+    }
+  }
+
   eks_managed_node_group_defaults = {
     ami_type = "AL2_x86_64"
 
