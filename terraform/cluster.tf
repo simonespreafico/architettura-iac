@@ -14,6 +14,10 @@ module "eks" {
   # Estende sg per permettere accesso alla macchina ec2 "devops"
   cluster_security_group_additional_rules = {
     ingress_ec2 = {
+      description                = "Accesso EKS da istanza ec2 devops"
+      protocol                   = "-1"
+      from_port                  = 0
+      to_port                    = 65535
       type                       = "ingress"
       source_security_group_id   = aws_security_group.devsecops-istance-sg.id
     }
