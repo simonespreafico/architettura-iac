@@ -12,6 +12,10 @@ resource "aws_instance" "devsecops-istance" {
   
   associate_public_ip_address = true  # Aggiunto per assegnare un IP pubblico
 
+  root_block_device {
+    volume_size = 40 #estensione volume ebs a 40 gb
+  }
+
   tags = {
     Name = "vm-devops"
   }
