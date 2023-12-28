@@ -7,6 +7,12 @@ pipeline {
 
     environment {
         TERRAFORM_DIR="terraform"
+        PROMETHEUS_DIR="prometheus"
+        KUBE_METRICS_DIR='kube-state-metrics'
+        DASHBOARD_DIR='dashboard'
+
+        AWS_REGION='us-east-1'
+        CLUSTER_NAME='cluster-simone'
     }
 
     stages {
@@ -141,6 +147,36 @@ pipeline {
                             sh "terraform output"
                         }
                     }
+                }
+            }
+        }
+        stage('Monitoring') {
+            when {
+                expression {
+                    return params.distruzione == false
+                }
+            }
+            steps {
+                withCredentials([aws(accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'simone-aws-creds', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY')]) {
+                    sh 'aws eks update-kubeconfig --region ${AWS_REGION} --name ${CLUSTER_NAME}'
+                    sh 'kubectl --kubeconfig /var/lib/jenkins/.kube/config cluster-info'
+                    dir("${PROMETHEUS_DIR}") {
+                        sh 'kubectl create namespace monitoring || true'
+                        sh 'kubectl apply -f .'
+                    }
+                    dir("${KUBE_METRICS_DIR}") {
+                        sh 'kubectl apply -f .'
+                    }
+                    dir("${DASHBOARD_DIR}") {
+                        sh 'kubectl apply -f .'
+                        sh 'kubectl create serviceaccount dashboard -n kubernetes-dashboard'
+                        sh 'kubectl create clusterrolebinding dashboard-admin -n kubernetes-dashboard --clusterrole=cluster-admin --serviceaccount=kubernetes-dashboard:dashboard'
+                        echo 'Access Token K8s Dashboard'
+                        sh 'kubectl -n kubernetes-dashboard create token dashboard'
+                    }
+                    sh 'kubectl create deployment grafana --image=docker.io/grafana/grafana:latest -n monitoring'
+                    sh 'kubectl expose deployment grafana --type LoadBalancer --port 3000 -n monitoring'
+                    
                 }
             }
         }
