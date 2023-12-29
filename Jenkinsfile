@@ -184,7 +184,7 @@ pipeline {
                     sh 'kubectl expose deployment grafana --type LoadBalancer --port 3000 -n monitoring'
                     
                     script {
-                        def grafana_url = sh(returnStdout: true, script: "kubectl get service grafana --output=jsonpath='{.status.loadBalancer.ingress[0].hostname}'")
+                        def grafana_url = sh(returnStdout: true, script: "kubectl get service grafana -n monitoring --output=jsonpath='{.status.loadBalancer.ingress[0].hostname}'")
                         echo "Grafana accessibile da ${grafana_url}:3000"
                     }
                 }
