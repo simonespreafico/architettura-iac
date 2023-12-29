@@ -160,23 +160,33 @@ pipeline {
                 withCredentials([aws(accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'simone-aws-creds', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY')]) {
                     sh 'aws eks update-kubeconfig --region ${AWS_REGION} --name ${CLUSTER_NAME}'
                     sh 'kubectl --kubeconfig /var/lib/jenkins/.kube/config cluster-info'
+                    
+                    dir("${KUBE_METRICS_DIR}") {
+                        sh 'kubectl apply -f .'
+                    }
+                    
                     dir("${PROMETHEUS_DIR}") {
                         sh 'kubectl create namespace monitoring || true'
                         sh 'kubectl apply -f .'
                     }
-                    dir("${KUBE_METRICS_DIR}") {
-                        sh 'kubectl apply -f .'
-                    }
+
                     dir("${DASHBOARD_DIR}") {
                         sh 'kubectl apply -f .'
                         sh 'kubectl create serviceaccount dashboard -n kubernetes-dashboard'
                         sh 'kubectl create clusterrolebinding dashboard-admin -n kubernetes-dashboard --clusterrole=cluster-admin --serviceaccount=kubernetes-dashboard:dashboard'
-                        echo 'Access Token K8s Dashboard'
-                        sh 'kubectl -n kubernetes-dashboard create token dashboard'
+                        
+                        script {
+                            def tokendashboard = sh(returnStdout: true, script: "kubectl -n kubernetes-dashboard create token dashboard")
+                            echo "K8s dashboard access token: ${tokendashboard}"
+                        }
                     }
                     sh 'kubectl create deployment grafana --image=docker.io/grafana/grafana:latest -n monitoring'
                     sh 'kubectl expose deployment grafana --type LoadBalancer --port 3000 -n monitoring'
                     
+                    script {
+                        def grafana_url = sh(returnStdout: true, script: "kubectl get service grafana --output=jsonpath='{.status.loadBalancer.ingress[0].hostname}'")
+                        echo "Grafana accessibile da ${grafana_url}:3000"
+                    }
                 }
             }
         }
