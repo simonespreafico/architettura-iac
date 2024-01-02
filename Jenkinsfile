@@ -158,7 +158,7 @@ pipeline {
             }
             steps {
                 withCredentials([aws(accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'simone-aws-creds', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY')]) {
-                    sh './home/s/.local/bin/aws eks update-kubeconfig --region ${AWS_REGION} --name ${CLUSTER_NAME}'
+                    sh 'aws eks update-kubeconfig --region ${AWS_REGION} --name ${CLUSTER_NAME}'
                     sh 'kubectl --kubeconfig /var/lib/jenkins/.kube/config cluster-info'
                     
                     dir("${KUBE_METRICS_DIR}") {
