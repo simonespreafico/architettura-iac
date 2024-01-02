@@ -172,7 +172,7 @@ pipeline {
 
                     dir("${DASHBOARD_DIR}") {
                         sh 'kubectl apply -f .'
-                        sh 'kubectl create serviceaccount dashboard -n kubernetes-dashboard'
+                        sh 'kubectl create serviceaccount dashboard -n kubernetes-dashboard || true'
                         sh 'kubectl create clusterrolebinding dashboard-admin -n kubernetes-dashboard --clusterrole=cluster-admin --serviceaccount=kubernetes-dashboard:dashboard || true'
                         
                         script {
@@ -180,8 +180,8 @@ pipeline {
                             echo "K8s dashboard access token: ${tokendashboard}"
                         }
                     }
-                    sh 'kubectl create deployment grafana --image=docker.io/grafana/grafana:latest -n monitoring'
-                    sh 'kubectl expose deployment grafana --type LoadBalancer --port 3000 -n monitoring'
+                    sh 'kubectl create deployment grafana --image=docker.io/grafana/grafana:latest -n monitoring || true'
+                    sh 'kubectl expose deployment grafana --type LoadBalancer --port 3000 -n monitoring || true'
                     
                     script {
                         def grafana_url = sh(returnStdout: true, script: "kubectl get service grafana -n monitoring --output=jsonpath='{.status.loadBalancer.ingress[0].hostname}'")
