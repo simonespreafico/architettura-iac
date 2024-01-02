@@ -173,7 +173,7 @@ pipeline {
                     dir("${DASHBOARD_DIR}") {
                         sh 'kubectl apply -f .'
                         sh 'kubectl create serviceaccount dashboard -n kubernetes-dashboard'
-                        sh 'kubectl create clusterrolebinding dashboard-admin -n kubernetes-dashboard --clusterrole=cluster-admin --serviceaccount=kubernetes-dashboard:dashboard'
+                        sh 'kubectl create clusterrolebinding dashboard-admin -n kubernetes-dashboard --clusterrole=cluster-admin --serviceaccount=kubernetes-dashboard:dashboard || true'
                         
                         script {
                             def tokendashboard = sh(returnStdout: true, script: "kubectl -n kubernetes-dashboard create token dashboard")
