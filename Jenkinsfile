@@ -3,6 +3,7 @@ pipeline {
 
     parameters {
         booleanParam(name: "distruzione", description: "Distruggere l'infrastruttura?", defaultValue: false )
+        booleanParam(name: "skipsec", description: "Saltare controlli di sicurezza?", defaultValue: false )
     }
 
     environment {
@@ -17,6 +18,11 @@ pipeline {
 
     stages {
         stage('Update tool security') {
+            when {
+                expression {
+                    return params.skipsec == true
+                }
+            }
             steps {
                 script {
                     echo "Update gitleaks..."
@@ -53,6 +59,11 @@ pipeline {
             }
         }
         stage('Rilevazione segreti repository') {
+            when {
+                expression {
+                    return params.skipsec == true
+                }
+            }
             steps {
                 ansiColor('xterm') {
                     sh "gitleaks detect -f junit -r gitleaks-report.xml"
@@ -62,6 +73,11 @@ pipeline {
             }
         }
         stage('Scansione codice Iac') {
+            when {
+                expression {
+                    return params.skipsec == true
+                }
+            }
             steps {
                 dir("${TERRAFORM_DIR}") {
                     ansiColor('xterm') {
