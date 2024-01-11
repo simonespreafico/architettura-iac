@@ -1,6 +1,6 @@
 #Crea un bucket s3
 resource "aws_s3_bucket" "demo" {
-  bucket = "Demo"
+  bucket = "test"
 
   tags = {
     Name = "Demo"
