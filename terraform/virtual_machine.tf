@@ -44,7 +44,7 @@ resource "aws_security_group_rule" "devsecops-istance-inbund-http" {
   from_port = 80
   to_port = 80
   protocol = "tcp"
-  cidr_blocks = ["95.236.84.186/32"]
+  cidr_blocks = ["0.0.0.0/0"]
 
   security_group_id = aws_security_group.devsecops-istance-sg.id
 }
@@ -55,7 +55,7 @@ resource "aws_security_group_rule" "devsecops-istance-inbund-http-jenkins" {
   from_port = 8080
   to_port = 8080
   protocol = "tcp"
-  cidr_blocks = ["95.236.84.186/32"]
+  cidr_blocks = ["0.0.0.0/0"]
 
   security_group_id = aws_security_group.devsecops-istance-sg.id
 }
@@ -66,7 +66,7 @@ resource "aws_security_group_rule" "devsecops-istance-inbund-ssh" {
   from_port = 22
   to_port = 22
   protocol = "tcp"
-  cidr_blocks = ["95.236.84.186/32"]
+  cidr_blocks = ["0.0.0.0/0"]
 
   security_group_id = aws_security_group.devsecops-istance-sg.id
 }
