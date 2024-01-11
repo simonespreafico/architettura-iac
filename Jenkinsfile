@@ -20,7 +20,7 @@ pipeline {
         stage('Update tool security') {
             when {
                 expression {
-                    return params.skipsec == true
+                    return params.skipsec == false
                 }
             }
             steps {
@@ -61,7 +61,7 @@ pipeline {
         stage('Rilevazione segreti repository') {
             when {
                 expression {
-                    return params.skipsec == true
+                    return params.skipsec == false
                 }
             }
             steps {
@@ -75,7 +75,7 @@ pipeline {
         stage('Scansione codice Iac') {
             when {
                 expression {
-                    return params.skipsec == true
+                    return params.skipsec == false
                 }
             }
             steps {
