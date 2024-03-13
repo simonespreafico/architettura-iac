@@ -1,8 +1,8 @@
 /* Macchina virtuale EC2 per deploy applicazione */
 
 resource "aws_instance" "devsecops-istance" {
-  #ts:skip=AC_AWS_0480 Monitoring non necessario per macchina devsecops
-  #ts:skip=AC_AWS_0479 Disabilitazione Metadati istanza non necessario per macchina devsecops
+  #tsa:skip=AC_AWS_0480 Monitoring non necessario per macchina devsecops
+  #tsa:skip=AC_AWS_0479 Disabilitazione Metadati istanza non necessario per macchina devsecops
   ami           = "ami-0230bd60aa48260c6"
   instance_type = "t2.medium"
   key_name = "vm-devops-key"
@@ -50,7 +50,7 @@ resource "aws_security_group_rule" "devsecops-istance-inbund-http" {
 }
 
 resource "aws_security_group_rule" "devsecops-istance-inbund-http-jenkins" {
-  #ts:skip=AC_AWS_0284 Devo permettere accesso a jenkins
+  #tsa:skip=AC_AWS_0284 Devo permettere accesso a jenkins
   type = "ingress"
   from_port = 8080
   to_port = 8080
@@ -61,7 +61,7 @@ resource "aws_security_group_rule" "devsecops-istance-inbund-http-jenkins" {
 }
 
 resource "aws_security_group_rule" "devsecops-istance-inbund-ssh" {
-  #ts:skip=AC_AWS_0319 Devo permettere accesso a istanza tramite ssh
+  #tsa:skip=AC_AWS_0319 Devo permettere accesso a istanza tramite ssh
   type = "ingress"
   from_port = 22
   to_port = 22
